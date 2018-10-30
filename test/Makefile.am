@@ -5,6 +5,7 @@ test_runner_SOURCES = librepsheet_test.c   \
                       blacklist_test.c     \
                       whitelist_test.c     \
                       marked_test.c        \
+                      recorder_test.c      \
                       xff_test.c           \
                       test_runner.c        \
                       ../src/librepsheet.c \
@@ -18,6 +19,8 @@ test_runner_SOURCES = librepsheet_test.c   \
                       ../src/blacklist.c   \
                       ../src/whitelist.c   \
                       ../src/marked.c      \
+                      ../src/recorder.c    \
+                      ../src/recorder.h    \
                       ../src/xff.c         \
                       ../src/xff.h         \
                       ../src/vector.h      \

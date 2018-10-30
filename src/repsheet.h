@@ -47,4 +47,9 @@ void set_initial_whitelist_size(int new_size);
 void set_initial_blacklist_size(int new_size);
 void set_cache_expiry(unsigned int new_expiry);
 
+#define __RECORDER_H
+int record(redisContext *context, char *timestamp, const char *user_agent,
+           const char *http_method, char *uri, char *arguments, int redis_max_length,
+           int redis_expiry, const char *actor);
+
 #endif

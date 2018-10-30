@@ -7,6 +7,7 @@ librepsheet_la_SOURCES = librepsheet.c \
                          blacklist.c   \
                          whitelist.c   \
                          marked.c      \
+                         recorder.c    \
                          xff.c         \
                          vector.c      \
                          check_cidr.c

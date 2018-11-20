@@ -29,7 +29,7 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
            const char *http_method, char *uri, char *arguments, int redis_max_length,
            int redis_expiry, const char *actor, char *transaction_id)
 {
-  char *t, *ua, *method, *u, *args, *thehour, *rec, *rechour, *recua, *recuid, *hour;
+  char *t, *ua, *method, *u, *args, *rec, *rechour, *recua, *recuid, *hour;
 
   //TODO: should probably use asprintf here to save a bunch of
   //nonsense calls. Make sure there is a sane way to do this across

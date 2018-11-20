@@ -29,7 +29,7 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
            const char *http_method, char *uri, char *arguments, int redis_max_length,
            int redis_expiry, const char *actor, char *transaction_id)
 {
-  char *t, *ua, *method, *u, *args, *rec, *rechour, *recua, *recuid, *hour;
+  char *t, *ua, *method, *u, *args, *rechour, *recua, *recuid, *hour;
 
   //TODO: should probably use asprintf here to save a bunch of
   //nonsense calls. Make sure there is a sane way to do this across
@@ -85,9 +85,6 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
     sprintf(args, "%s", arguments);
   }
 
-  rec = (char*)malloc(strlen(t) + strlen(ua) + strlen(method) + strlen(u) + strlen(args) + 9);
-  sprintf(rec, "%s, %s, %s, %s, %s", t, ua, method, u, args);
-
   rechour = (char *)malloc(strlen(t) + strlen(transaction_id) + strlen(method) + strlen(u) + 4);
   sprintf(rechour, "%s,%s,%s,%s", t, transaction_id, method, u);
 
@@ -106,13 +103,6 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
   redisReply * reply;
 
   redisCommand(context, "MULTI");
-  // rec
-  redisCommand(context, "LPUSH %s:requests %s", actor, rec);
-  redisCommand(context, "LTRIM %s:requests 0 %d", actor, (redis_max_length - 1));
-  if (redis_expiry > 0) {
-    redisCommand(context, "EXPIRE %s:requests %d", actor, redis_expiry);
-  }
-  
   //rechour
   redisCommand(context, "LPUSH %s:requests:%s %s", actor, hour, rechour);
   redisCommand(context, "LTRIM %s:requests:%s 0 %d", actor, hour, (redis_max_length - 1));
@@ -136,7 +126,6 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
 
 
   if (reply) {
-    free(rec);
     free(rechour);
     free(recuid);
     free(recua);
@@ -144,7 +133,6 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
     freeReplyObject(reply);
     return LIBREPSHEET_OK;
   } else {
-    free(rec);
     free(rechour);
     free(recuid);
     free(recua);

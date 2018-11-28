@@ -29,7 +29,7 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
            const char *http_method, char *uri, char *arguments, int redis_max_length,
            int redis_expiry, const char *actor, char *transaction_id)
 {
-  char *t, *ua, *method, *u, *args, *rechour, *recua, *recuid, *hour;
+  char *t, *ua, *method, *u, *args, *rechour, *recua, *hour;
 
   //TODO: should probably use asprintf here to save a bunch of
   //nonsense calls. Make sure there is a sane way to do this across
@@ -91,9 +91,6 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
   recua = (char *)malloc(strlen(ua) + 1);
   sprintf(recua, "%s", ua);
 
-  recuid = (char *)malloc(strlen(actor) + 1);
-  sprintf(recuid, "%s", actor);
-
   free(t);
   free(ua);
   free(method);
@@ -110,12 +107,6 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
     redisCommand(context, "EXPIRE %s:requests:%s %d", actor, hour, redis_expiry);
   }
 
-  //recuid
-  redisCommand(context, "SET %s %s", transaction_id, recuid);
-  if (redis_expiry > 0) {
-    redisCommand(context, "EXPIRE %s %d", transaction_id, redis_expiry);
-  }
-
   //recua
   redisCommand(context, "SET %s:userAgent %s", transaction_id, recua);
   if (redis_expiry > 0) {
@@ -127,14 +118,12 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
 
   if (reply) {
     free(rechour);
-    free(recuid);
     free(recua);
     free(hour);
     freeReplyObject(reply);
     return LIBREPSHEET_OK;
   } else {
     free(rechour);
-    free(recuid);
     free(recua);
     free(hour);
     return DISCONNECTED;

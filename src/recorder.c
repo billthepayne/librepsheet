@@ -106,13 +106,13 @@ int record(redisContext *context, char *timestamp, const char *user_agent,
   if (redis_expiry > 0) {
     redisCommand(context, "EXPIRE %s:requests:%s %d", actor, hour, redis_expiry);
   }
-
+/* ---- Don't record user agent here... send via logs instead...
   //recua
   redisCommand(context, "SET %s:userAgent %s", transaction_id, recua);
   if (redis_expiry > 0) {
     redisCommand(context, "EXPIRE %s:userAgent %d", transaction_id, redis_expiry);
   }
-
+*/
   reply = redisCommand(context, "EXEC");
 
 

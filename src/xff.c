@@ -39,7 +39,7 @@ int remote_address(char *connected_address, char *xff_header, char *address)
     char *p;
     char *str_begin;
 
-    str_begin = p;
+    str_begin = xff_header;
     
     for (p = xff_header; p < (xff_header + strlen(xff_header)); p++) {
       if (*p == ' ' || *p == ',') {

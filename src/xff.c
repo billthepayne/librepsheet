@@ -18,7 +18,7 @@
 
 /**
  * Determines the IP address of the actor. If X-Forwarded-For has
- * information, the function takes the first address in the string. If
+ * information, the function takes the last address in the string. If
  * no XFF information is provided the function returns the
  * connected_address.
  *
@@ -37,16 +37,21 @@ int remote_address(char *connected_address, char *xff_header, char *address)
 
   if (xff_header != NULL) {
     char *p;
+    char *str_begin;
 
+    str_begin = p;
+    
     for (p = xff_header; p < (xff_header + strlen(xff_header)); p++) {
       if (*p == ' ' || *p == ',') {
-        break;
+        if ((p + 1) <= (xff_header + strlen(xff_header))) {
+          str_begin = p + 1;
+        }
       }
     }
 
-    length = p - xff_header;
+    length = p - str_begin;
     char test_address[length + 1];
-    memcpy(test_address, xff_header, length);
+    memcpy(test_address, str_begin, length);
     test_address[length] = '\0';
 
     unsigned char buf[sizeof(struct in_addr)];
